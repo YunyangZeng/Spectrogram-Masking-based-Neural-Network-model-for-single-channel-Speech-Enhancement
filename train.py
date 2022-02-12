@@ -49,7 +49,6 @@ class trainer:
         return loss
     
     def get_SNRi(self,enhanced, enhanced_clean, noisy, clean, noise):
-     
         snr_orig = np.mean(clean**2)/np.mean(noise**2)
         snr_orig_db = 10*np.log10(snr_orig)
         
@@ -74,7 +73,6 @@ class trainer:
                             win_length=int(self.window_length*self.sr))
    
     def delta_phase(self,batch_spectrogram):
-
         batch_delta_phase = np.zeros_like(batch_spectrogram)
         for i in range(batch_spectrogram.shape[0]):
             spectrogram=batch_spectrogram[i,:,:]
@@ -113,12 +111,9 @@ class trainer:
             batch_noisy_compressed_i = tf.expand_dims(batch_noisy_compressed_i, axis=-1)
             batch_delta_phase = tf.expand_dims(tf.cast(batch_delta_phase, 'float64'), axis=-1)
             batch_noisy_compressed_ri = tf.concat([batch_noisy_compressed_r, batch_noisy_compressed_i], axis=-1)
-            
             mask = tf.cast(self.model.call(batch_noisy_compressed_ri),'float64')               
-            
             batch_enhanced = tf.cast(tf.math.multiply(batch_noisy_compressed_ri, mask),'complex128')
             batch_enhanced = batch_enhanced[:,:,:,0]+batch_enhanced[:,:,:,1]*1j
-            
             batch_clean_compressed_r = tf.math.real(batch_clean_compressed)
             batch_clean_compressed_i = tf.math.imag(batch_clean_compressed)
             batch_clean_compressed_r = tf.expand_dims(batch_clean_compressed_r, axis=-1)
@@ -126,10 +121,7 @@ class trainer:
             batch_clean_compressed_ri = tf.concat([batch_clean_compressed_r, batch_clean_compressed_i], axis=-1)
             batch_clean_enhanced = tf.cast(tf.math.multiply(batch_clean_compressed_ri, tf.cast(self.model.call(batch_clean_compressed_ri),'float64')),'complex128')
             batch_clean_enhanced = batch_clean_enhanced[:,:,:,0]+batch_clean_enhanced[:,:,:,1]*1j
-            
-            
-            loss = self.loss(tf.pow(batch_enhanced,0.3), batch_clean_compressed)
-            
+            loss = self.loss(tf.pow(batch_enhanced,0.3), batch_clean_compressed
             for ind in range(self.batch_size):
                 enhanced_istft = self.istft(np.abs(np.transpose(batch_enhanced[ind,:,:].numpy())), np.angle(np.transpose(batch_clean[ind,:,:])))
                 enhanced_clean_istft = self.istft(np.abs(np.transpose(batch_clean_enhanced[ind,:,:].numpy())), np.angle(np.transpose(batch_clean[ind,:,:])))                        
@@ -151,37 +143,14 @@ class trainer:
         avg_epoch_SNRi = epoch_SNRi/(num_batch*self.batch_size)   
         avg_epoch_SDR = epoch_SDR/(num_batch*self.batch_size)
         avg_epoch_orig_SDR = epoch_orig_SDR/(num_batch*self.batch_size)
-        for sp in range(batch_enhanced.shape[0]//5):
-            plt.imshow(20*np.log(np.transpose(np.abs(batch_enhanced[sp,:,:]))+1e-9),cmap='jet')
-            plt.title('testing enhanced %d' %sp)
-            plt.gca().invert_yaxis()
-            plt.show()
-            plt.imshow(20*np.log(np.transpose(np.abs(batch_noisy[sp,:,:]))+1e-9),cmap='jet')
-            plt.title('testing noisy %d' %sp)
-            plt.gca().invert_yaxis()
-            plt.show()
-            plt.imshow(20*np.log(np.transpose(np.abs(batch_clean[sp,:,:]))+1e-9),cmap='jet')
-            plt.title('testing clean %d' %sp)
-            plt.gca().invert_yaxis()
-            plt.show()
-            plt.imshow(20*np.log(np.transpose(np.abs(mask[sp,:,:,0]))+1e-9),cmap='jet')
-            plt.title('testing mask_re %d' %sp)
-            plt.gca().invert_yaxis()
-            plt.show()
-            plt.imshow(20*np.log(np.transpose(np.abs(mask[sp,:,:,1]))+1e-9),cmap='jet')
-            plt.title('testing mask_im %d' %sp)
-            plt.gca().invert_yaxis()
-            plt.show()
         return loss, avg_epoch_SNRi, avg_epoch_SDR, avg_epoch_orig_SDR
     
     def train(self,from_checkpoint = False, save_weights=True):
         noisy_dir = self.cfg.get('STFT','NoisySpeech_training_dir')
         clean_dir = self.cfg.get('STFT','CleanSpeech_training_dir')
         noise_dir = self.cfg.get('STFT','Noise_training_dir')       
-        
         optimizer = tf.keras.optimizers.Adam(learning_rate=self.learn_rate)
         weights_save_dir = "./cp/my_checkpoint"
-
         current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
         if not os.path.exists('./logs/gradient_tape/'):
             os.makedirs('./logs/gradient_tape/')
@@ -201,27 +170,19 @@ class trainer:
             for i in tqdm(range(num_batch)):
                 batch_noisy_matfile_dirs = files[i*self.batch_size : (i+1)*self.batch_size]
                 batch_noisy, batch_clean, batch_noise, noisy_wavfile_dirs, clean_wavfile_dirs, noise_wavfile_dirs = self.loader.get_batch(batch_noisy_matfile_dirs, noisy_dir, clean_dir, noise_dir)
-            
                 with tf.GradientTape() as tape:
                     batch_noisy = tf.transpose(batch_noisy,perm=[0,2,1])
                     batch_clean = tf.transpose(batch_clean,perm=[0,2,1])
-                    
                     batch_noisy_compressed = tf.math.pow(batch_noisy,0.3)
                     batch_clean_compressed = tf.math.pow(batch_clean,0.3)
-
                     batch_noisy_compressed_r = tf.math.real(batch_noisy_compressed)
-                    batch_noisy_compressed_i = tf.math.imag(batch_noisy_compressed)
-                    
+                    batch_noisy_compressed_i = tf.math.imag(batch_noisy_compressed)                  
                     batch_noisy_compressed_r = tf.expand_dims(batch_noisy_compressed_r, axis=-1)
                     batch_noisy_compressed_i = tf.expand_dims(batch_noisy_compressed_i, axis=-1)
-
-                    batch_noisy_compressed_ri = tf.concat([batch_noisy_compressed_r, batch_noisy_compressed_i], axis=-1)
-                    
-                    mask = tf.cast(self.model.call(batch_noisy_compressed_ri),'float64')
-                                       
+                    batch_noisy_compressed_ri = tf.concat([batch_noisy_compressed_r, batch_noisy_compressed_i], axis=-1)       
+                    mask = tf.cast(self.model.call(batch_noisy_compressed_ri),'float64')                     
                     batch_enhanced = tf.cast(tf.math.multiply(batch_noisy_compressed_ri, mask),'complex128')
-                    batch_enhanced = batch_enhanced[:,:,:,0]+batch_enhanced[:,:,:,1]*1j
-                    
+                    batch_enhanced = batch_enhanced[:,:,:,0]+batch_enhanced[:,:,:,1]*1j     
                     batch_clean_compressed_r = tf.math.real(batch_clean_compressed)
                     batch_clean_compressed_i = tf.math.imag(batch_clean_compressed)
                     batch_clean_compressed_r = tf.expand_dims(batch_clean_compressed_r, axis=-1)
@@ -229,18 +190,14 @@ class trainer:
                     batch_clean_compressed_ri = tf.concat([batch_clean_compressed_r, batch_clean_compressed_i], axis=-1)
                     batch_clean_enhanced = tf.cast(tf.math.multiply(batch_clean_compressed_ri, tf.cast(self.model.call(batch_clean_compressed_ri),'float64')),'complex128')
                     batch_clean_enhanced = batch_clean_enhanced[:,:,:,0]+batch_clean_enhanced[:,:,:,1]*1j
-                    
-                    
                     loss = self.loss(tf.pow(batch_enhanced,0.3), batch_clean_compressed)
                 grads = tape.gradient(loss, self.model.trainable_variables)
                 optimizer.apply_gradients(grads_and_vars=zip(grads, self.model.trainable_variables))
                 time.sleep(0.05)
                 
                 for ind in range(self.batch_size):
-                
                     enhanced_istft = self.istft(np.abs(np.transpose(batch_enhanced[ind,:,:].numpy())), np.angle(np.transpose(batch_clean[ind,:,:])))
                     enhanced_clean_istft = self.istft(np.abs(np.transpose(batch_clean_enhanced[ind,:,:].numpy())), np.angle(np.transpose(batch_clean[ind,:,:])))
-                    
                     noisy_istft,_ = sf.read(noisy_wavfile_dirs[ind])
                     clean_istft,_ = sf.read(clean_wavfile_dirs[ind])
                     noise_istft,_ = sf.read(noise_wavfile_dirs[ind])
@@ -271,31 +228,7 @@ class trainer:
                 tf.summary.scalar('Testing Loss', testing_loss, step=e)
                 tf.summary.scalar('Testing SNRi', avg_testing_epoch_SNRi, step=e)
                 tf.summary.scalar('Testing SDR', avg_testing_epoch_SDR, step=e)
-                
-            
-            for sp in range(batch_enhanced.shape[0]//5):
-                plt.imshow(20*np.log(np.transpose(np.abs(batch_enhanced[sp,:,:]))+1e-9),cmap='jet')
-                plt.title('training enhanced %d' %sp)
-                plt.gca().invert_yaxis()
-                plt.show()
-                plt.imshow(20*np.log(np.transpose(np.abs(batch_noisy[sp,:,:]))+1e-9),cmap='jet')
-                plt.title('training noisy %d' %sp)
-                plt.gca().invert_yaxis()
-                plt.show()
-                plt.imshow(20*np.log(np.transpose(np.abs(batch_clean[sp,:,:]))+1e-9),cmap='jet')
-                plt.title('training clean %d' %sp)
-                plt.gca().invert_yaxis()
-                plt.show()
-                plt.imshow(20*np.log(np.transpose(np.abs(mask[sp,:,:,0]))+1e-9),cmap='jet')
-                plt.title('training mask_re %d' %sp)
-                plt.gca().invert_yaxis()
-                plt.show()
-                plt.imshow(20*np.log(np.transpose(np.abs(mask[sp,:,:,1]))+1e-9),cmap='jet')
-                plt.title('training mask_im %d' %sp)
-                plt.gca().invert_yaxis()
-                plt.show()
-                
-                
+
         print("##################")
         print("Training finished!")     
     
