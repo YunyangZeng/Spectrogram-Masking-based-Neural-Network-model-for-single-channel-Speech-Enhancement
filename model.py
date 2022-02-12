@@ -124,13 +124,13 @@ class MyModel(tf.keras.Model):
         for i in range(8-1):
             X_=tf.concat([X_, X[:,:,:,i+1]],axis=-1)
         X=X_
-        #X=tf.reshape(X,[X.shape[0], X.shape[1], X.shape[2]*X.shape[3]])
+        
         X=self.blstm1(X)
         #X=self.blstm2(X)
         #X=self.blstm3(X)
         X=self.dense1(X)
         X=self.dense2(X)
-        #X = tf.reshape(X,[X.shape[0], X.shape[1], X.shape[2]//2, 2])
+        
         
         X = tf.concat([tf.expand_dims(X[:,:,0:257],axis=-1), tf.expand_dims(X[:,:,257:514],axis=-1)],axis=-1)
         return X
