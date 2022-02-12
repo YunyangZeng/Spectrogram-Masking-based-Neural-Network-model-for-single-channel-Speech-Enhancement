@@ -63,21 +63,3 @@ class loader:
         
 
 
-'''
-loader=loader('.\Training_STFT','.\Testing_STFT')
-batch_size = 10
-files = loader.get_file('.\Training_STFT', shuffle = True)
-
-num_files = len(files)
-num_batch = num_files//batch_size
-
-for i in range(num_batch):
-    batch_files = files[i*batch_size : (i+1)*batch_size]
-    batch_noisy, batch_clean, batch_noise = loader.get_batch(batch_files)
-    break
-
-p=batch_noisy[0,:,:]
-plt.imshow(20*np.log(np.abs(p)),cmap = 'jet')
-plt.gca().invert_yaxis()
-plt.show()
-'''
