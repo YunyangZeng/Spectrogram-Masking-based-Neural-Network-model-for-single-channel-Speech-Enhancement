@@ -172,33 +172,7 @@ if __name__ == "__main__":
             
             
         
-    '''   
-        noisy_stft_file = librosa.stft(noisy,n_fft=512,hop_length=int(0.01*16000),win_length=int(0.025*16000),window='hann')
-        clean_stft_file = librosa.stft(clean,n_fft=512,hop_length=int(0.01*16000),win_length=int(0.025*16000),window='hann')
-        noise_stft_file = librosa.stft(noise,n_fft=512,hop_length=int(0.01*16000),win_length=int(0.025*16000),window='hann')
-        clean_new_stft_file = librosa.stft(clean_new,n_fft=512,hop_length=int(0.01*16000),win_length=int(0.025*16000),window='hann')
-        noise_new_stft_file = librosa.stft(noise_new,n_fft=512,hop_length=int(0.01*16000),win_length=int(0.025*16000),window='hann')
-        plt.imshow(20*np.log(np.transpose(np.abs(noisy_stft_file))+1e-9),cmap='jet')
-        plt.title('noisy %d' %i)
-        plt.gca().invert_yaxis()
-        plt.show()
-        plt.imshow(20*np.log(np.transpose(np.abs(clean_new_stft_file))+1e-9),cmap='jet')
-        plt.title('clean_new %d' %i)
-        plt.gca().invert_yaxis()
-        plt.show()
-        plt.imshow(20*np.log(np.transpose(np.abs(noise_new_stft_file))+1e-9),cmap='jet')
-        plt.title('noise_new %d' %i)
-        plt.gca().invert_yaxis()
-        plt.show()
-        plt.imshow(20*np.log(np.transpose(np.abs(clean_stft_file))+1e-9),cmap='jet')
-        plt.title('clean %d' %i)
-        plt.gca().invert_yaxis()
-        plt.show()
-        plt.imshow(20*np.log(np.transpose(np.abs(noise_stft_file))+1e-9),cmap='jet')
-        plt.title('noise %d' %i)
-        plt.gca().invert_yaxis()
-        plt.show()
-        '''
+ 
         
         
         
