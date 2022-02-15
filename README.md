@@ -44,7 +44,7 @@ After configuration, run "./data/data_prep.py", 6 folders will be created under 
 ## STFT
 In order to speed up training, the STFT of all training and testing sound files are calculated a proir. Edit "config.ini" in the main directory to configure your STFT settings. According to the paper, a hann window with 25ms window length and 10ms hop size is used, number of frequency bins is set to 512.
 
-Run "STFT.py", two folders named "Training_STFT" and "Testing_STFT" will be created under the main directory.
+Run "STFT.py", two folders named **Training_STFT** and **Testing_STFT** will be created under the main directory.
 
 ## Train
 Run "train.py" will train the model. Model parameters are saved in "cp". If you want to resume training from last checkpoint, modify the last line of "train.py", change it as
@@ -59,6 +59,22 @@ The enhanced testing files are saved under "./enhanced"
 
 ---
 
-## Model
+## System architecture
+**Delta phase is not used in this implementation because I haven't figured out the correct way to implement it**.
+![](./assets/System_architecture.PNG)
+
+---
+
+## Result
+- Trained on an NVIDIA RTX 3080 GPU for 24 hours.
+### SDR
+|    Metric   |  value  |
+|-------------|---------|
+| AVG SDR     | 11.65db |
+| AVG SNRi    | 9.96db  |
+
+![](./assets/Testing_SDR.PNG)
+![](./assets/Testing_SNRi.PNG)
+
 
 
