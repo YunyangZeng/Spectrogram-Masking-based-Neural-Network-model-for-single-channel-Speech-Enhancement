@@ -237,4 +237,4 @@ if __name__ == "__main__":
     cfg=configparser.ConfigParser()
     cfg.read('.\\config.ini',encoding='utf8')
     trainer = trainer(cfg, MyModel, loader, '.\Training_STFT', '.\Testing_STFT',n_epoch=1000, batch_size=10, Lambda = 0.113)
-    b_ny = trainer.train(from_checkpoint=False,save_weights = True)
+    trainer.train(from_checkpoint=False,save_weights = True)
