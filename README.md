@@ -76,5 +76,9 @@ The enhanced testing files are saved under "./enhanced"
 ![](./assets/Testing_SDR.PNG)
 ![](./assets/Testing_SNRi.PNG)
 
-
-
+### Example 
+![](./assets/demo/spectrogram/testing_enhanced_1.png)
+![](./assets/demo/spectrogram/testing_clean_1.png)
+![](./assets/demo/spectrogram/testing_noisy_1.png)
+![](./assets/demo/spectrogram/testing_mask_real_1.png)
+![](./assets/demo/spectrogram/testing_mask_imaginary_1.png)
