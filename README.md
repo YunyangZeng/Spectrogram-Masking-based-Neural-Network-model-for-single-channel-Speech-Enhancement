@@ -76,9 +76,27 @@ The enhanced testing files are saved under "./enhanced"
 ![](./assets/Testing_SDR.PNG)
 ![](./assets/Testing_SNRi.PNG)
 
-### Example 
+### Spectrogram Example 
 ![](./assets/demo/spectrogram/testing_enhanced_1.png)
 ![](./assets/demo/spectrogram/testing_clean_1.png)
 ![](./assets/demo/spectrogram/testing_noisy_1.png)
 ![](./assets/demo/spectrogram/testing_mask_real_1.png)
 ![](./assets/demo/spectrogram/testing_mask_imaginary_1.png)
+
+### Sound Examples
+-sound 1
+
+https://user-images.githubusercontent.com/43918015/157794941-4a0272f1-d308-406b-a8b5-c6cdc4526442.mp4
+
+https://user-images.githubusercontent.com/43918015/157795161-aaf57f3e-5501-42f6-9ac4-57e7e8597959.mp4
+
+https://user-images.githubusercontent.com/43918015/157795401-62e3c8f6-7770-4441-be26-2d9cd26111c0.mp4
+
+-sound 2
+
+https://user-images.githubusercontent.com/43918015/157796082-4bd4b1f7-39b8-4fb5-a969-5c2d9fd94940.mp4
+
+https://user-images.githubusercontent.com/43918015/157796110-f13fdd23-8730-4be7-83e3-117ed6735182.mp4
+
+https://user-images.githubusercontent.com/43918015/157796130-1c5f78ec-4f07-4ff7-9956-6e0eaa12cec4.mp4
+
